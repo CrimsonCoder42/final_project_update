@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}HomeShare{% endblock %}</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link href="{% static 'homeshare/css/feed.css' %}" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script type="text/javascript" src="{% static 'homeshare/javascript/feed.js' %}"></script>
+    </head>
+    <body>
+
+        <nav>
+
+            <div class="container">
+                <a href="{% url 'login' %}"><label class="bttn bttn-primary" for="create-account">Create account</label></a>
+
+                <div class="create">
+                    <span class="material-symbols-rounded">
+                        home_app_logo
+                    </span>
+                    <a class="list_card_class" href="{% url 'feed' %}"><h2 class="log">
+                    homeShare
+                    </h2></a>
+                </div>
+                    {% if user.is_authenticated %}
+                    <div>
+                        <h6>signed in as: {{ user.username }}</h6>
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </div>
+                    {% else %}
+                    <div>
+                        <h6>You are not logged in</h6>
+                        <a class="nav-link" href="{% url 'login' %}">Sign in</a>
+                    </div>
+
+                    {% endif %}
+
+            </div>
+
+
+
+<!--            <div>-->
+            <!--            <a class="navbar-brand" href="#">Network</a>-->
+<!--              <ul class="navbar-nav mr-auto">-->
+<!--                {% if user.is_authenticated %}-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>-->
+<!--                    </li>-->
+<!--                {% endif %}-->
+<!--                <li class="nav-item">-->
+<!--                  <a class="nav-link" href="{% url 'feed' %}">All Posts</a>-->
+<!--                </li>-->
+<!--                {% if user.is_authenticated %}-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="#">Following</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>-->
+<!--                    </li>-->
+<!--                {% else %}-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="{% url 'login' %}">Log In / Register </a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" href="{% url 'login' %}">Register</a>-->
+<!--                    </li>-->
+<!--                {% endif %}-->
+<!--              </ul>-->
+<!--            </div>-->
+          </nav>
+
+        <div class="body">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </body>
+</html>

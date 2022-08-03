@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>New Listing</h2>
+
+    <form action="{% url 'new_listing' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="title">Title:</label>
+                <input type="text" class="form-control" id="title" placeholder="Enter title" name="title">
+            </div>
+            <div class="form-group col-md-6">
+                <input class="form-check-input" type="checkbox" name="active" id="active">
+                <label class="form-check-label" for="active">
+                    make active
+                </label>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="img">Select image 1:</label>
+                <input type="file" id="img" name="img" accept="image/*">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="img2">Select image 2:</label>
+                <input type="file" id="img2" name="img2" accept="image/*">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="img3">Select image 3:</label>
+                <input type="file" id="img3" name="img3" accept="image/*">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="img4">Select image 4:</label>
+                <input type="file" id="img4" name="img4" accept="image/*">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="img5">Select image 5:</label>
+                <input type="file" id="img5" name="img5" accept="image/*">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="img6">Select image 6:</label>
+                <input type="file" id="img6" name="img6" accept="image/*">
+            </div>
+        </div>
+        <br>
+        <div class="form-row">
+            <div class="form-group">
+                <input type="text" class="form-control" name="address_1" id="address_1" placeholder="Address 1">
+                    <br>
+                <input type="text" class="form-control" name="address_2" id="address_2"
+                       placeholder="Address 2">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="city">City:</label>
+                <input type="text" class="form-control" name="city" id="city">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="state">State:</label>
+                <select id="state" name="state" class="form-control">
+                    <option selected>Choose...</option>
+                    <option>AL</option>
+                    <option>AK</option>
+                    <option>AZ</option>
+                    <option>AR</option>
+                    <option>CA</option>
+                    <option>CO</option>
+                    <option>CT</option>
+                    <option>DE</option>
+                    <option>DC</option>
+                    <option>FL</option>
+                    <option>GA</option>
+                    <option>HI</option>
+                    <option>ID</option>
+                    <option>IL</option>
+                    <option>IN</option>
+                    <option>IA</option>
+                    <option>KS</option>
+                    <option>KY</option>
+                    <option>LA</option>
+                    <option>ME</option>
+                    <option>MD</option>
+                    <option>MA</option>
+                    <option>MI</option>
+                    <option>MN</option>
+                    <option>MS</option>
+                    <option>MO</option>
+                    <option>MT</option>
+                    <option>NE</option>
+                    <option>NV</option>
+                    <option>NH</option>
+                    <option>NJ</option>
+                    <option>NM</option>
+                    <option>NY</option>
+                    <option>NC</option>
+                    <option>ND</option>
+                    <option>OH</option>
+                    <option>OK</option>
+                    <option>OR</option>
+                    <option>PA</option>
+                    <option>PR</option>
+                    <option>RI</option>
+                    <option>SC</option>
+                    <option>SD</option>
+                    <option>TN</option>
+                    <option>TX</option>
+                    <option>UT</option>
+                    <option>VT</option>
+                    <option>VA</option>
+                    <option>VI</option>
+                    <option>WA</option>
+                    <option>WV</option>
+                    <option>WI</option>
+                    <option>WY</option>
+
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="inputZip">Zip:</label>
+                <input type="text" class="form-control" id="inputZip">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <hr>
+            </div>
+        </div>
+
+        <!--        Make sure to put in date pickers -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="description">Description:</label>
+                <input type="text" class="form-control" name="description" id="description">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="cost">Price per night:</label>
+                <input type="text" class="form-control" name="cost" id="cost">
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="rooms">Rooms (between 1 and 10):</label>
+            <input type="number" id="rooms" name="rooms" min="1" max="10">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="bathrooms">Bathrooms (between 1 and 10):</label>
+            <input type="number" id="bathrooms" name="bathrooms" min="1" max="10">
+        </div>
+        <div class="form-group">
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name=pool id="pool">
+                <label class="form-check-label" for="pool">
+                    pool
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="wifi" id="wifi">
+                <label class="form-check-label" for="wifi">
+                    wifi
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="kitchen" id="kitchen">
+                <label class="form-check-label" for="kitchen">
+                    kitchen
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="free_parking" id="free_parking">
+                <label class="form-check-label" for="free_parking">
+                    free parking
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="jacuzzi" id="jacuzzi">
+                <label class="form-check-label" for="jacuzzi">
+                    jacuzzi
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="washer" id="washer">
+                <label class="form-check-label" for="washer">
+                    Check me out
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="air_conditioning" id="air_conditioning">
+                <label class="form-check-label" for="air_conditioning">
+                    air conditioning
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="self_check_in" id="self_check_in">
+                <label class="form-check-label" for="self_check_in">
+                    self check-in
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="workspace" id="workspace">
+                <label class="form-check-label" for="workspace">
+                    workspace
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="pets_allowed" id="pets_allowed">
+                <label class="form-check-label" for="pets_allowed">
+                    pets allowed
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="smoke_alarm" id="smoke_alarm">
+                <label class="form-check-label" for="smoke_alarm">
+                    smoke alarm
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="carbon_monoxide_alarm" id="carbon_monoxide_alarm">
+                <label class="form-check-label" for="carbon_monoxide_alarm">
+                    carbon monoxide alarm
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="fire_extinguisher" id="fire_extinguisher">
+                <label class="form-check-label" for="fire_extinguisher">
+                    fire extinguisher
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="first_aid_kit" id="first_aid_kit">
+                <label class="form-check-label" for="first_aid_kit">
+                    first aid kit
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="crib_and_high_chair" id="crib_and_high_chair">
+                <label class="form-check-label" for="crib_and_high_chair">
+                    crib & high chair
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="bathtub" id="bathtub">
+                <label class="form-check-label" for="bathtub">
+                    bathtub
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="wine_glasses" id="wine_glasses">
+                <label class="form-check-label" for="wine_glasses">
+                    wine glasses
+                </label>
+            </div>
+            <div class="form-group col-md-4">
+                <input class="form-check-input" type="checkbox" name="coffee_maker" id="coffee_maker">
+                <label class="form-check-label" for="coffee_maker">
+                    coffee maker
+                </label>
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

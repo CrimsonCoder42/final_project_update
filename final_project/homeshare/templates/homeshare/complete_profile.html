@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}HomeShare{% endblock %}</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link href="{% static 'homeshare/css/login_register.css' %}" rel="stylesheet">
+    </head>
+    <body>
+
+    <div class="container">
+
+        <div id="complete_profile_message">
+            <h1>Please complete your profile to continue. </h1>
+        </div>
+
+
+        <div class="form-container">
+            <div class="signin-signup" id="login-form">
+                <div class="login-logo">
+                    <span class="material-symbols-rounded">
+                        home_app_logo
+                    </span>
+                </div>
+
+                    {% if login_message %}
+                    <div>{{ login_message }}</div>
+                    {% endif %}
+
+
+                <form action="{% url 'complete_profile' %}" method="post" enctype="multipart/form-data" class="sign-in-form" >
+                    {% csrf_token %}
+                    <h2 class="title"> Complete Profile</h2>
+
+                    <div class="input-field">
+                        <span class="material-symbols-rounded">
+                            person
+                        </span>
+                        <input type="text" name="username" readonly="readonly" value="{{user.username}}"/>
+                    </div>
+
+                    <div id=bioDiv class="input-field">
+                        <span class="material-symbols-rounded">
+                            psychology_alt
+                        </span>
+                        <input type="text" size="50"  maxlength="50" name="bio" placeholder="A little about you"/>
+                    </div>
+
+                    <div id="upload_image">
+                        <label for="img">Select image:</label>
+                            <input type="file" id="img" name="img" accept="image/*">
+                    </div>
+
+                    <input type="submit" class="btn solid" value="Apply" />
+
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
