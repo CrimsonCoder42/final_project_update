@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('#your_profile').style.display = 'none';
   document.querySelector('#following').style.display = 'none';
   document.querySelector('#wish_list').style.display = 'none';
-  document.querySelector('#chat').style.display = 'none';
+  document.querySelector('#notifications').style.display = 'none';
   document.querySelector('#property_listing').style.display = 'none';
   document.querySelector('#update_profile_view').style.display = 'none';
 
@@ -27,7 +27,7 @@ function home_feed(){
   document.querySelector('#your_profile').style.display = 'none';
   document.querySelector('#following').style.display = 'none';
   document.querySelector('#wish_list').style.display = 'none';
-  document.querySelector('#chat').style.display = 'none';
+  document.querySelector('#notifications').style.display = 'none';
   document.querySelector('#property_listing').style.display = 'none';
   document.querySelector('#update_profile_view').style.display = 'none';
 
@@ -38,7 +38,7 @@ function your_profile(){
   document.querySelector('#your_profile').style.display = 'block';
   document.querySelector('#following').style.display = 'none';
   document.querySelector('#wish_list').style.display = 'none';
-  document.querySelector('#chat').style.display = 'none';
+  document.querySelector('#notifications').style.display = 'none';
   document.querySelector('#property_listing').style.display = 'none';
   document.querySelector('#update_profile_view').style.display = 'none';
 
@@ -49,7 +49,7 @@ function youFollowing(){
   document.querySelector('#your_profile').style.display = 'none';
   document.querySelector('#following').style.display = 'block';
   document.querySelector('#wish_list').style.display = 'none';
-  document.querySelector('#chat').style.display = 'none';
+  document.querySelector('#notifications').style.display = 'none';
   document.querySelector('#property_listing').style.display = 'none';
   document.querySelector('#update_profile_view').style.display = 'none';
 
@@ -60,7 +60,7 @@ function yourWishList(){
   document.querySelector('#your_profile').style.display = 'none';
   document.querySelector('#following').style.display = 'none';
   document.querySelector('#wish_list').style.display = 'block';
-  document.querySelector('#chat').style.display = 'none';
+  document.querySelector('#notifications').style.display = 'none';
   document.querySelector('#property_listing').style.display = 'none';
   document.querySelector('#update_profile_view').style.display = 'none';
 
@@ -71,10 +71,12 @@ function notificationsMessaging(){
   document.querySelector('#your_profile').style.display = 'none';
   document.querySelector('#following').style.display = 'none';
   document.querySelector('#wish_list').style.display = 'none';
-  document.querySelector('#chat').style.display = 'block';
+  document.querySelector('#notifications').style.display = 'block';
   document.querySelector('#property_listing').style.display = 'none';
   document.querySelector('#update_profile_view').style.display = 'none';
 
+
+  load_mailbox('inbox');
 }
 
 function propertyListing(){
@@ -82,7 +84,7 @@ function propertyListing(){
   document.querySelector('#your_profile').style.display = 'none';
   document.querySelector('#following').style.display = 'none';
   document.querySelector('#wish_list').style.display = 'none';
-  document.querySelector('#chat').style.display = 'none';
+  document.querySelector('#notifications').style.display = 'none';
   document.querySelector('#property_listing').style.display = 'block';
   document.querySelector('#update_profile_view').style.display = 'none';
 
@@ -93,8 +95,19 @@ function update_profile(){
   document.querySelector('#your_profile').style.display = 'none';
   document.querySelector('#following').style.display = 'none';
   document.querySelector('#wish_list').style.display = 'none';
-  document.querySelector('#chat').style.display = 'none';
+  document.querySelector('#notifications').style.display = 'none';
   document.querySelector('#property_listing').style.display = 'none';
   document.querySelector('#update_profile_view').style.display = 'block';
+
+}
+
+// Only effects elements in Notifications
+function load_mailbox(mailbox) {
+
+    // Show the mailbox and hide other views
+    document.querySelector('#emails-list').style.display = 'block';
+    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'none';
+
 
 }

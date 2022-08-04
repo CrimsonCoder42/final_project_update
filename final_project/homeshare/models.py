@@ -56,6 +56,33 @@ class Property_listing(models.Model):
     wine_glasses = models.BooleanField(default=False)
     coffee_maker = models.BooleanField(default=False)
 
+# change the email to allow for notifications. When boolean values are checked they are endered differently.
+class Notifications(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="notifications")
+    sender = models.ForeignKey("User", on_delete=models.PROTECT, related_name="notifications_sent")
+    recipients = models.ManyToManyField("User", related_name="notifications_received")
+    subject = models.CharField(max_length=255)
+    body = models.TextField(blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    follow_request = models.BooleanField(default=False)
+    book_location = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
+    archived = models.BooleanField(default=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "sender": self.sender.email,
+            "recipients": [user.email for user in self.recipients.all()],
+            "subject": self.subject,
+            "body": self.body,
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "read": self.read,
+            "archived": self.archived
+        }
+
+
+
 
 class LikePost(models.Model):
     post_id = models.CharField(max_length=500)

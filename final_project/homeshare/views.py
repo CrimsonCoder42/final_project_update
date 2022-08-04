@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from django.core.paginator import Paginator
 
-from .models import User, Profile, Property_listing, LikePost, FollowersCount
+from .models import User, Profile, Property_listing, LikePost, FollowersCount, Notifications
 
 
 @login_required(login_url="login")
@@ -18,12 +18,27 @@ def feed(request):
     current_profile = Profile.objects.get(user=request.user)
     current_listings = Property_listing.objects.filter(active=True)
     user_listings = Property_listing.objects.filter(active=True, owner=request.user)
+    follow_requests = Notifications.objects.filter(
+        user=request.user,
+        recipients=request.user,
+        archived=False,
+        follow_request=True,
+        book_location=False
+    )
+    messages = Notifications.objects.filter(
+        user=request.user,
+        recipients=request.user,
+        archived=False,
+        follow_request=False,
+        book_location=False
+    )
 
-
+    print(follow_requests)
     return render(request, "homeshare/feed.html", {
         'current_profile': current_profile,
         'current_listings':current_listings,
         'user_listings':user_listings,
+        'follow_requests':follow_requests
         })
 
 
@@ -43,7 +58,8 @@ def user_profile(request, username):
 
     return render(request, "homeshare/user_profile.html", {
         'owner_profile': owner_profile,
-        'owner_listings': owner_listings
+        'owner_listings': owner_listings,
+        'get_user': get_user
     })
 
 
@@ -73,6 +89,15 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("feed"))
 
 
+# Took to long to find the answer to restricting username and password with out building a model so I just wrote a helper function
+def prevent_duplicate_email(email):
+    try:
+        check = User.objects.get(email=email)
+        return True
+    except:
+        return False
+
+
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -88,19 +113,24 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
+            if prevent_duplicate_email(email):
+                return render(request, "homeshare/login_register.html", {
+                    "register_message": "email already taken."
+                })
+            else:
+                user = User.objects.create_user(username, email, password)
+                user.save()
 
             # A new profile for users is created with sign up.
             # however they need to be redirected to finalize profile page.
 
-            get_user = User.objects.get(username=username)
-            create_profile = Profile(
-                user=get_user,
-                username=username,
-                profile_id=get_user.id)
+                get_user = User.objects.get(username=username)
+                create_profile = Profile(
+                    user=get_user,
+                    username=username,
+                    profile_id=get_user.id)
 
-            create_profile.save()
+                create_profile.save()
 
         except IntegrityError:
             return render(request, "homeshare/login_register.html", {
@@ -231,3 +261,126 @@ def True_or_False(bool):
         return True
     else:
         return False
+
+
+# ------------------------------------Notification Section-------------------------------
+
+# shows or hides notifications based on status
+@login_required
+def notify_service(request, service):
+
+    # Filter emails returned based on mailbox
+    if service == "inbox":
+        notifications = Notifications.objects.filter(
+            user=request.user, recipients=request.user, archived=False
+        )
+    elif service == "sent":
+        notifications = Notifications.objects.filter(
+            user=request.user, sender=request.user
+        )
+    elif service == "archive":
+        notifications = Notifications.objects.filter(
+            user=request.user, recipients=request.user, archived=True
+        )
+    else:
+        return JsonResponse({"error": "Invalid service."}, status=400)
+
+    # Return emails in reverse chronologial order
+    notifications = notifications.order_by("-timestamp").all()
+    return JsonResponse([notice.serialize() for notice in notifications], safe=False)
+
+
+# give you the ability to message an individual
+@csrf_exempt
+@login_required
+def create_alert(request):
+
+    # Composing a new email must be via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+
+    # Check recipient emails
+    data = json.loads(request.body)
+    notifications = [notice.strip() for notice in data.get("recipients").split(",")]
+    if notifications == [""]:
+        return JsonResponse({
+            "error": "At least one recipient required."
+        }, status=400)
+
+    # Convert email addresses to users
+    recipients = []
+    for notice in notifications:
+        try:
+            user = User.objects.get(email=notice)
+            recipients.append(user)
+        except User.DoesNotExist:
+            return JsonResponse({
+                "error": f"User {notice} does not exist."
+            }, status=400)
+
+    # Get contents of email
+    subject = data.get("subject", "")
+    body = data.get("body", "")
+    follow_request = False
+    if data.get("follow_request") is not None:
+        follow_request = data.get("follow_request", "")
+
+
+    # Create one email for each recipient, plus sender
+    users = set()
+    users.add(request.user)
+    users.update(recipients)
+    for user in users:
+        new_notice = Notifications(
+            user=user,
+            sender=request.user,
+            subject=subject,
+            body=body,
+            read=user == request.user,
+            follow_request=follow_request
+
+        )
+
+        # if data.get("follow_request") is not None:
+        #     print("hello")
+        #     new_notice.follow_request = data["follow_request"]
+
+        new_notice.save()
+        for recipient in recipients:
+            new_notice.recipients.add(recipient)
+
+        new_notice.save()
+
+
+    return JsonResponse({"message": "Email sent successfully."}, status=201)
+
+
+@csrf_exempt
+@login_required
+def notice(request, email_id):
+
+    # Query for requested email
+    try:
+        email = Notifications.objects.get(user=request.user, pk=email_id)
+    except Notifications.DoesNotExist:
+        return JsonResponse({"error": "Email not found."}, status=404)
+
+    # Return email contents
+    if request.method == "GET":
+        return JsonResponse(email.serialize())
+
+    # Update whether email is read or should be archived
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("read") is not None:
+            notice.read = data["read"]
+        if data.get("archived") is not None:
+            notice.archived = data["archived"]
+        email.save()
+        return HttpResponse(status=204)
+
+    # Email must be via GET or PUT
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)

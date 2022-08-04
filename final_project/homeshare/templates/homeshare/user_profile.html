@@ -1,4 +1,3 @@
-
 {% extends "homeshare/feed_layout.html" %}
 {% load static %}
 {% block body %}
@@ -11,11 +10,39 @@
             <div class="product_user_profile">
                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
                      alt="Generic placeholder image" class="profile-picture"
-                     >
+                >
                 <div id="chat_follow_btn">
-                            <a href="#"><label id="followbttn" class="bttn bttn-primary" for="follow">Follow</label></a>
-                            <a href="#"><label id="chatbttn" class="bttn bttn-primary" for="follow">Chat</label></a>
+
+
+                    <form id="friend_request">
+                        <input disabled class="hidden" value="{{ request.user.email }}">
+                        <input disabled id="friend_receiver" class="hidden" value="{{ get_user.email }}">
+                        <input disabled class="hidden" id="friend_subject" value="{{ request.user.email }} has requested to follow you">
+                        <textarea disabled class="hidden" id="friend_body" placeholder="Body">
+                            {{ request.user.email }} has requested to follow you
+                        </textarea>
+
+                        <input id="friend_request_btn" type="submit" value="Friend Request" class="bttn bttn-primary"/>
+                    </form>
+                    <a><label id="messagebttn" class="bttn bttn-primary" for="follow">Message
+                        {{get_user.username}}</label></a>
                 </div>
+            </div>
+            <div id="compose-view">
+                <form id="compose-form">
+                    <div class="form-group">
+                        <input disabled class="hidden" value="{{ request.user.email }}">
+                    </div>
+                    <div class="form-group">
+                        <input disabled id="compose-recipients" class="hidden" value="{{ get_user.email }}">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" id="compose-subject" placeholder="Subject">
+                    </div>
+                    <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
+                    <br>
+                    <input id="message" type="submit" class="bttn bttn-primary"/>
+                </form>
             </div>
 
         </div>
@@ -27,15 +54,15 @@
                     <p class="font-italic mb-1">Lives in New York</p>
                     <p class="font-italic mb-0">Photographer</p>
                     <div class="d-flex justify-content-end text-center py-1">
-                <div class="px-3">
-                    <p class="mb-1 h5">1026</p>
-                    <p class="small text-muted mb-0">Followers</p>
-                </div>
-                <div>
-                    <p class="mb-1 h5">478</p>
-                    <p class="small text-muted mb-0">Following</p>
-                </div>
-            </div>
+                        <div class="px-3">
+                            <p class="mb-1 h5">1026</p>
+                            <p class="small text-muted mb-0">Followers</p>
+                        </div>
+                        <div>
+                            <p class="mb-1 h5">478</p>
+                            <p class="small text-muted mb-0">Following</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -65,7 +92,7 @@
         </div>
     </div>
 
-
+    <script type="text/javascript" src="{% static 'homeshare/javascript/user_profile.js' %}"></script>
 </div>
 
 
