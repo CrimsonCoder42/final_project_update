@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelector('#update_profile').addEventListener( 'click', () => update_profile() );
 
 
+    // get reply email element
+  document.querySelector('#message_reply').addEventListener('click', () => reply() );
+
+
+
+
 
   // notification views
 
@@ -24,6 +30,20 @@ document.addEventListener('DOMContentLoaded', function () {
         element.addEventListener('click', () => view_message(element.id))
         });
 
+
+ // add an event listener to every delete button.
+
+let delete_ele = document.querySelectorAll('[data-name="Delete"]')
+  Array.from(delete_ele).forEach(element => {
+         element.addEventListener('click', () => remove_notice(element.dataset.id) );
+         });
+
+let delist_ele = document.querySelectorAll('[data-name="Delist"]')
+  Array.from(delist_ele).forEach(element => {
+            console.log( element.dataset.status)
+         element.addEventListener('click', () => delist(element.dataset.id ,element.dataset.status) );
+
+         });
 
 
 
@@ -122,8 +142,6 @@ function booking_offers(){
 }
 
 
-
-
 function propertyListing(){
   document.querySelector('#home_feed').style.display = 'none';
   document.querySelector('#your_profile').style.display = 'none';
@@ -140,21 +158,11 @@ function update_profile(){
     update_profile_view.className = 'display'
 }
 
-// Only effects elements in Notifications
-function load_mailbox(mailbox) {
 
-    // Show the mailbox and hide other views
-    document.querySelector('#emails-list').style.display = 'block';
-    document.querySelector('#emails-view').style.display = 'none';
-    document.querySelector('#compose-view').style.display = 'none';
-
-
-}
 
 
 function view_message(id) {
   let delete_in_view = document.getElementById('message_delete_view');
-
 
 
     fetch(`/notice/${id}`)
@@ -169,41 +177,88 @@ function view_message(id) {
 }
 
 function fill_in_values(data) {
-
-  document.querySelector('#messages_view').style.display = 'none';
-  document.querySelector('#friend_requests_view').style.display = 'none';
-  document.querySelector('#booking_offers_view').style.display = 'none';
-  document.querySelector('#compose-view').style.display = 'none';
-  document.querySelector('#emails-view').style.display = 'block';
+    view_reset()
+    emails_view.className = 'display'
+    notifications_view.className = 'display'
 
     console.log("fill in",data)
     let whoSent = data.sender
 
-        document.querySelector('#email-sender').innerText = whoSent;
+        document.querySelector('#email_sent_by').innerText = whoSent;
 
         document.querySelector('#dateTime').innerText = data.timestamp;
         document.querySelector('#email-subject').innerText = data.subject;
         document.querySelector('#email-body').value = data.body;
 
-    // updates read for particular email
-    //  fetch(`/emails/${data.id}`, {
-    //     method: 'PUT',
-    //     body: JSON.stringify({
-    //         read: false
-    //     })
-    //   })
+}
+
+
+function reply() {
+
+
+    let senderEmail = document.getElementById('email_sent_by').innerText
+    let subject = document.getElementById('email-subject').innerText
+    let body = document.getElementById('email-body').value
+    let datetime = document.getElementById('dateTime').innerText
+
+    console.log(senderEmail)
+    console.log(subject)
+    console.log(body)
+    console.log(datetime)
+
+
+    document.querySelector('#compose-recipients').value = senderEmail
+    document.querySelector('#compose-subject').value = `Re: ${subject}`
+    document.querySelector('#compose-body').value = `on ${datetime}, ${senderEmail} wrote: ${body}`
+
+    view_reset()
+    compose_view.className = 'display'
+    notifications_view.className = 'display'
 }
 
 function remove_notice(id) {
+    // get element by ID which is also dataset for delete button and apply hidden for auto removal
 
-    fetch(`/emails/${id}`, {
+    let remove_ele =document.getElementById(`${id}`)
+    remove_ele.className = 'hidden'
+    view_reset()
+    notifications_view.className = 'display'
+    messages_view.className = 'display'
+
+    fetch(`/notice/${id}`, {
         method: 'PUT',
         body: JSON.stringify({
-            archived: True
-            })
+            archived: true
         })
-    }
+    })
 
+  }
+
+  // runs like remove_notice except that you can toggle the real estate listing between active and inactive
+
+  function delist(id,bool) {
+
+    let new_bool = bool_switch(bool)
+
+    fetch(`/property/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            active: bool_switch(bool)
+        })
+    }).then(location.reload())
+
+  }
+
+// simple helper bool switch function
+  function bool_switch(bool) {
+
+      if(bool === "True"){
+          return false
+      }else {
+          return true
+      }
+
+}
 
 
 

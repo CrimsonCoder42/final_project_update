@@ -17,7 +17,7 @@ from .models import User, Profile, Property_listing, LikePost, FollowersCount, N
 def feed(request):
     current_profile = Profile.objects.get(user=request.user)
     current_listings = Property_listing.objects.filter(active=True)
-    user_listings = Property_listing.objects.filter(active=True, owner=request.user)
+    user_listings = Property_listing.objects.filter(owner=request.user)
     follow_requests = Notifications.objects.filter(
         user=request.user,
         recipients=request.user,
@@ -33,7 +33,7 @@ def feed(request):
         book_location=False
     )
 
-    print(follow_requests)
+
     return render(request, "homeshare/feed.html", {
         'current_profile': current_profile,
         'current_listings':current_listings,
@@ -339,22 +339,25 @@ def notice(request, notice_id):
 
     # Query for requested email
     try:
-        email = Notifications.objects.get(user=request.user, pk=notice_id)
+        note_message = Notifications.objects.get(user=request.user, pk=notice_id)
+
     except Notifications.DoesNotExist:
         return JsonResponse({"error": "Email not found."}, status=404)
 
     # Return email contents
     if request.method == "GET":
-        return JsonResponse(email.serialize())
+        return JsonResponse(note_message.serialize())
 
     # Update whether email is read or should be archived
+
     elif request.method == "PUT":
         data = json.loads(request.body)
+
         if data.get("read") is not None:
-            notice.read = data["read"]
+            note_message.read = data["read"]
         if data.get("archived") is not None:
-            notice.archived = data["archived"]
-        email.save()
+            note_message.archived = data["archived"]
+        note_message.save()
         return HttpResponse(status=204)
 
     # Email must be via GET or PUT
@@ -364,7 +367,36 @@ def notice(request, notice_id):
         }, status=400)
 
 
+@csrf_exempt
+@login_required
+# Update listings as needed
+def property(request, listing_id):
 
-# get individual message
+    # Query for requested email
+    try:
+        prop_listing = Property_listing.objects.get(owner=request.user, pk=listing_id)
+        print("listing", prop_listing)
 
+    except Property_listing.DoesNotExist:
+        return JsonResponse({"error": "Property not found."}, status=404)
+
+    # Return email contents
+    if request.method == "GET":
+        return JsonResponse(prop_listing.serialize())
+
+    # Update whether email is read or should be archived
+
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+
+        if data.get("active") is not None:
+            prop_listing.active = data["active"]
+        prop_listing.save()
+        return HttpResponse(status=204)
+
+    # Email must be via GET or PUT
+    else:
+        return JsonResponse({
+            "error": "GET or PUT request required."
+        }, status=400)
 

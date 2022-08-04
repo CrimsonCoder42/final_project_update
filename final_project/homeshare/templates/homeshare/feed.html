@@ -134,7 +134,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between p-price">
-                                <span><strong>Bathrooms:</strong></span><span>{{ listing.bathrooms }}</span>
+                                <span><strong>Bathrooms:</strong></span>{{ listing.bathrooms }}
                             </div>
                         </div>
 
@@ -163,17 +163,16 @@
                         <div class="p-4" style="background-color: #f8f9fa;">
                             <p class="mb-1"><strong>Username:</strong> {{current_profile.user}}</p>
                             <p class="mb-1"><strong>Bio:</strong> {{current_profile.bio}} </p>
-                            <p class="font-italic mb-0">Photographer</p>
+
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <p class="lead fw-normal mb-0">Active Properties</p>
+                        <p class="lead fw-normal mb-0">Properties</p>
                         <p class="mb-0"><a href="{% url 'new_listing' %}" class="text-muted">Add Property</a></p>
                     </div>
                             {% for listing in user_listings %}
 
                 <div class="listing_card">
-                    <a class="list_card_class" href="">
                         <div class="card p-3 bg-white" style="box-shadow: 2px 2px 2px 2px #aaa; max-width: 20em;">
                             <div class="row no-gutters">
                                 <div class="listing_card_main_pic">
@@ -193,17 +192,27 @@
                             </div>
                             <div class="stats mt-2">
                                 <div class="d-flex justify-content-between p-price">
-                                    <span><strong>City:</strong></span><span>{{ listing.city }}</span></div>
+                                    <span><strong>City</strong></span><span>{{ listing.city }}</span></div>
                                 <div class="d-flex justify-content-between p-price"><span><strong>State:</strong></span><span>{{ listing.state }}</span>
                                 </div>
-                                <div class="d-flex justify-content-between p-price"><span><strong>Rooms:</strong></span><span>{{ listing.rooms }}</span>
+                                <br>
+                                <div class="d-flex justify-content-between p-price"><span><strong></strong></span><span data-status="{{ listing.active }}" ></span>
                                 </div>
                             </div>
+
                             <div class="d-flex justify-content-between p-price">
-                                <span><strong>Bathrooms:</strong></span><span>{{ listing.bathrooms }}</span>
+                                <span><strong>Listing Status:
+                                </strong></span>
+                                <span>
+                                    <a><label class="bttn bttn-primary" data-name="Delist" data-id="{{ listing.id }}" data-status="{{ listing.active }}" for="Delist">
+                                        {% if listing.active %}
+                                            Delist
+                                            {% else %}
+                                            List
+                                        {% endif %}
+                                    </label></a></span>
                             </div>
                         </div>
-                    </a>
                 </div>
                 <br>
 
@@ -284,7 +293,7 @@
                                                 <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
 
                                                     {% for message in messages %}
-                                                    <tbody>
+                                                    <tbody id="{{message.id}}">
                                                     <tr>
                                                         <td>{{ message.sender }}</td>
 
@@ -292,8 +301,8 @@
 
                                                         <td>{{ message.timestamp }}</td>
 
-                                                        <td><a><label class="bttn bttn-primary"
-                                                                      for="Delete">Delete</label></a>
+                                                        <td><a><label class="bttn bttn-primary" data-name="Delete" data-id="{{ message.id }}" for="Delete">Delete</label></a>
+
                                                         </td>
 
                                                     </tr>
@@ -446,7 +455,7 @@
                 <div class="aside-header">
 
                 </div>
-                  From: <a href="#" id="email-sender">John Doe</a>
+                  From: <a href="#" id="email_sent_by">John Doe</a>
 
                   <div class="aside-compose">Subject: <span id ="email-subject"></span></div>
 
@@ -483,7 +492,7 @@
                     </div>
                     <div class="icons">
                         <div id="dateTime" class="date">Nov 20, 11:20</div>
-                        <a href="#" id= "email_replay" class="icon">Reply</a>
+                        <a href="#" id= "message_reply" class="icon">Reply</a>
                       </a>
                     </div>
                   </div>

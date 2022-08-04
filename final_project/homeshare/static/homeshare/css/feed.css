@@ -343,7 +343,7 @@ main .input-field span {
 
  .list_card_class, .list_card_class:hover, .list_card_class:focus, .list_card_class:active {
       text-decoration: none;
-      color: var(--logo_color);
+      color: var(--dark_color);
  }
 
  .listing_card_main_pic{

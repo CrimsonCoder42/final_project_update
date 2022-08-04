@@ -18,5 +18,6 @@ urlpatterns = [
     # API Routes
     path("create_alert", views.create_alert, name="create_alert"),
     path("notice/<int:notice_id>", views.notice, name="notice"),
+    path("property/<int:listing_id>", views.property, name="property")
 
 ]
