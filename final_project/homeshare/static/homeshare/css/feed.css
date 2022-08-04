@@ -116,9 +116,11 @@ form {
 }
 
 .display{
+    width: 90%;
     margin-top: 3vh;
-    margin-left: 1%;
-    height: 80%;
+    margin-left: 2%;
+    height: 90%;
+    overflow-y: scroll;
 }
 
 nav{
@@ -331,13 +333,6 @@ main .input-field span {
 
 }
 
-.display{
-  width: 100%;
-  height: 100%;
-  overflow-y: scroll;
-}
-
-
 .listing_card {
     width: 60%;
     margin-left: 10%;
@@ -360,6 +355,23 @@ main .input-field span {
     top: -9999px !important;
     left: -9999px !important;
     visibility: hidden !important;
+ }
+
+ .subject_link:hover{
+     color: var(--logo_color);
+     text-decoration: underline;
+ }
+
+ #update_profile_view {
+     position: relative;
+    height: 60%;
+    margin-top: 150px;
+    right:7%;
+    left:30%;
+    width: 70%;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: var(--dark_color);
  }
 
 

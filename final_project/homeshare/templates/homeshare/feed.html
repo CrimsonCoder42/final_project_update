@@ -95,7 +95,7 @@
 
             <!--                    HOME FEED   -->
 
-            <div class="display" id="home_feed">
+            <div class="hidden" id="home_feed">
 
 
                 {% for listing in current_listings %}
@@ -155,7 +155,7 @@
 
 
 
-            <div class="display" id="your_profile">
+            <div class="hidden" id="your_profile">
 
                 <div class="card-body p-4 text-black">
                     <div class="mb-5">
@@ -223,7 +223,7 @@
 
 
 
-            <div class="display" id="following">
+            <div class="hidden" id="following">
                 <h1>Following</h1>
 
             </div>
@@ -236,7 +236,7 @@
 
 
 
-            <div class="display" id="wish_list">
+            <div class="hidden" id="wish_list">
                 <h1>Wish List</h1>
 
             </div>
@@ -246,124 +246,177 @@
 <!--                NOTIFICATIONS            -->
 
 
-            <div class="display" id="notifications">
+            <div class="hidden" id="notifications">
 
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#"> <span class="material-symbols-outlined">
+                        <a class="nav-link active" id="messages_btn" aria-current="page" href="#"> <span
+                                class="material-symbols-outlined">
                             chat
                         </span>Messages</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" id="friend_request_btn" href="#">
                             <span class="material-symbols-outlined">
                                 group
                             </span>Friend Requests</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><span class="material-symbols-outlined">
+                        <a class="nav-link" id="booking_offers_btn" href="#"><span class="material-symbols-outlined">
                             book
                         </span>Booking Offers</a>
                     </li>
 
                 </ul>
 
+                <!--                MESSAGES VIEW-->
 
+                <div class="hidden" id="messages_view">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
+                                <div class="tab-content" id="messages_view_content">
+                                    <div class="tab-pane fade active show" aria-labelledby="inbox-tab" role="tabpanel">
 
-                            <div class="tab-content" id="myTabContent">
-                                <div class="tab-pane fade active show" aria-labelledby="inbox-tab" role="tabpanel">
+                                        <div id="emails-list">
+                                            <div class="table-responsive">
+                                                <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
 
-                                    <div id="emails-list">
-                                        <div class="table-responsive">
-                                            <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+                                                    {% for message in messages %}
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>{{ message.sender }}</td>
 
+                                                        <a href="#"><td class="subject_link" id="{{ message.id }}">{{ message.subject }}</td></a>
 
+                                                        <td>{{ message.timestamp }}</td>
 
-                                                <!--  -->
-                                            <div id="messages">
-                                                {% for follow_request in follow_requests %}
-                                               <tbody>
-                                                <tr>
-                                                    <td>{{ follow_request.timestamp }}</td>
+                                                        <td><a><label class="bttn bttn-primary"
+                                                                      for="Delete">Delete</label></a>
+                                                        </td>
 
-                                                    <td>{{ follow_request.subject }}</td>
+                                                    </tr>
 
-                                                    <td><a><label class="bttn bttn-primary" for="Accept">Accept</label></a>
-                                                    </td>
+                                                    </tbody>
 
-                                                    <td><a><label class="bttn bttn-primary" for="Delete">Delete</label></a>
-                                                    </td>
+                                                    {% empty %}
+                                                    No active listings.
+                                                    {% endfor %}
 
-                                                </tr>
-
-
-                                                </tbody>
-
-                                                {% empty %}
-                                                No active listings.
-                                                {% endfor %}
-
+                                                </table>
                                             </div>
-
-                                                <div id="friend_requests">
-                                               <tbody>
-                                                <tr>
-                                                    <td>{{ notice.timestamp }}</td>
-
-                                                    <td>{{ notice.subject }}</td>
-
-                                                    <td><a><label class="bttn bttn-primary" for="Accept">Accept</label></a>
-                                                    </td>
-
-                                                    <td><a><label class="bttn bttn-primary" for="Delete">Delete</label></a>
-                                                    </td>
-
-                                                </tr>
-
-
-                                                </tbody>
-
-
-                                            </div>
-
-                                                <div id="booking_offers">
-                                               <tbody>
-                                                <tr>
-                                                    <td>{{ notice.timestamp }}</td>
-
-                                                    <td>{{ notice.subject }}</td>
-
-                                                    <td><a><label class="bttn bttn-primary" for="Accept">Accept</label></a>
-                                                    </td>
-
-                                                    <td><a><label class="bttn bttn-primary" for="Delete">Delete</label></a>
-                                                    </td>
-
-                                                </tr>
-
-
-                                                </tbody>
-
-
-                                            </div>
-
-
-
-                                            </table>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+                    </div>
+                </div>
 
 
-        <div id="compose-view">
+                <!--                FRIEND REQUEST-->
+
+                <div class="hidden" id="friend_requests_view">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="tab-content" id="friend_requests_content">
+                                    <div class="tab-pane fade active show" aria-labelledby="inbox-tab" role="tabpanel">
+
+                                        <div id="friend_requests_list">
+                                            <div class="table-responsive">
+                                                <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+
+                                                    {% for follow_request in follow_requests %}
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>{{ follow_request.timestamp }}</td>
+
+                                                        <td>{{ follow_request.subject }}</td>
+
+                                                        <td><a><label class="bttn bttn-primary"
+                                                                      for="Accept">Accept</label></a>
+                                                        </td>
+
+                                                        <td><a><label class="bttn bttn-primary"
+                                                                      for="Delete">Delete</label></a>
+                                                        </td>
+                                                    </tr>
+
+                                                    </tbody>
+
+                                                    {% empty %}
+                                                    No active listings.
+                                                    {% endfor %}
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+<!--                BOOKING OFFERS -->
+
+                <div class="hidden" id="booking_offers_view">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+
+                                <div class="tab-content" id="booking_offers_content">
+                                    <div class="tab-pane fade active show" aria-labelledby="inbox-tab" role="tabpanel">
+
+                                        <div id="booking_offers_list">
+                                            <div class="table-responsive">
+                                                <table class="table email-table no-wrap table-hover v-middle mb-0 font-14">
+
+                                                    {% for follow_request in follow_requests %}
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>{{ follow_request.timestamp }}</td>
+
+                                                        <td>{{ follow_request.subject }}</td>
+
+                                                        <td><a><label class="bttn bttn-primary"
+                                                                      for="Accept">Accept</label></a>
+                                                        </td>
+
+                                                        <td><a><label class="bttn bttn-primary"
+                                                                      for="Delete">Delete</label></a>
+                                                        </td>
+                                                    </tr>
+
+                                                    </tbody>
+
+                                                    {% empty %}
+                                                    No active listings.
+                                                    {% endfor %}
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+<!--                COMPOSE EMAIL VIEW-->
+
+
+        <div class="hidden" id="compose-view">
             <form id="compose-form">
                 <div class="form-group">
                     From: <input disabled class="form-control" value="{{ request.user.email }}">
@@ -382,7 +435,7 @@
 
 
 
-        <div id="emails-view">
+        <div class="hidden" id="emails-view">
            <div class="row inbox-wrapper">
     <div class="col-lg-12">
       <div class="card">
@@ -393,7 +446,7 @@
                 <div class="aside-header">
 
                 </div>
-                  <a href="#" id="email-sender">John Doe</a> <span>to </span><a id="email-receiver" href="#"> me</a>
+                  From: <a href="#" id="email-sender">John Doe</a>
 
                   <div class="aside-compose">Subject: <span id ="email-subject"></span></div>
 
@@ -451,6 +504,10 @@
               <div class="email-body-div">
                 <textarea  disabled class="form-control" id="email-body" ></textarea>
               </div>
+            <br>
+
+            <a><label class="bttn bttn-primary" id="message_delete_view" for="Delete">Delete</label></a>
+
               <div class="email-attachments">
 
 
@@ -494,7 +551,7 @@
 
 
 
-            <div class="display" id="property_listing">
+            <div class="hidden" id="property_listing">
                 <h1>Property listing</h1>
 
 
@@ -607,7 +664,7 @@
 
 
 
-            <div id="update_profile_view" class="display">
+            <div id="update_profile_view" class="hidden">
                 <div class="form-container">
                     <div class="signin-signup" id="login-form">
 
@@ -648,10 +705,10 @@
                 </div>
             </div>
 
-        </div>
 
 
-    </div>
+
+
 <script type="text/javascript" src="{% static 'homeshare/javascript/feed.js' %}"></script>
 
     {% else %}

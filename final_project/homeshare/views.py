@@ -38,7 +38,8 @@ def feed(request):
         'current_profile': current_profile,
         'current_listings':current_listings,
         'user_listings':user_listings,
-        'follow_requests':follow_requests
+        'follow_requests':follow_requests,
+        'messages':messages
         })
 
 
@@ -265,29 +266,6 @@ def True_or_False(bool):
 
 # ------------------------------------Notification Section-------------------------------
 
-# shows or hides notifications based on status
-@login_required
-def notify_service(request, service):
-
-    # Filter emails returned based on mailbox
-    if service == "inbox":
-        notifications = Notifications.objects.filter(
-            user=request.user, recipients=request.user, archived=False
-        )
-    elif service == "sent":
-        notifications = Notifications.objects.filter(
-            user=request.user, sender=request.user
-        )
-    elif service == "archive":
-        notifications = Notifications.objects.filter(
-            user=request.user, recipients=request.user, archived=True
-        )
-    else:
-        return JsonResponse({"error": "Invalid service."}, status=400)
-
-    # Return emails in reverse chronologial order
-    notifications = notifications.order_by("-timestamp").all()
-    return JsonResponse([notice.serialize() for notice in notifications], safe=False)
 
 
 # give you the ability to message an individual
@@ -357,11 +335,11 @@ def create_alert(request):
 
 @csrf_exempt
 @login_required
-def notice(request, email_id):
+def notice(request, notice_id):
 
     # Query for requested email
     try:
-        email = Notifications.objects.get(user=request.user, pk=email_id)
+        email = Notifications.objects.get(user=request.user, pk=notice_id)
     except Notifications.DoesNotExist:
         return JsonResponse({"error": "Email not found."}, status=404)
 
@@ -384,3 +362,9 @@ def notice(request, email_id):
         return JsonResponse({
             "error": "GET or PUT request required."
         }, status=400)
+
+
+
+# get individual message
+
+
