@@ -25,6 +25,13 @@ def feed(request):
         follow_request=True,
         book_location=False
     )
+    booking_notice = Notifications.objects.filter(
+        user=request.user,
+        recipients=request.user,
+        archived=False,
+        follow_request=False,
+        book_location=True
+    )
     messages = Notifications.objects.filter(
         user=request.user,
         recipients=request.user,
@@ -33,13 +40,16 @@ def feed(request):
         book_location=False
     )
 
+    prop_listing = request.user.property_follow.all()
 
     return render(request, "homeshare/feed.html", {
         'current_profile': current_profile,
         'current_listings':current_listings,
         'user_listings':user_listings,
         'follow_requests':follow_requests,
-        'messages':messages
+        'messages':messages,
+        'prop_listing': prop_listing,
+        'booking_notice': booking_notice
         })
 
 
@@ -47,8 +57,13 @@ def feed(request):
 @login_required(login_url="login")
 def property_profile(request, id):
     current_listing = Property_listing.objects.get(id=id)
+    following = request.user.property_follow.all()
+    print(following)
 
-    return render(request, "homeshare/property_profile.html", {'current_listing': current_listing})
+    return render(request, "homeshare/property_profile.html", {
+        'current_listing': current_listing,
+        'following':following
+    })
 
 
 @login_required(login_url="login")
@@ -300,8 +315,11 @@ def create_alert(request):
     subject = data.get("subject", "")
     body = data.get("body", "")
     follow_request = False
+    book_location = False
     if data.get("follow_request") is not None:
         follow_request = data.get("follow_request", "")
+    if data.get("book_location") is not None:
+        book_location = data.get("book_location", "")
 
 
     # Create one email for each recipient, plus sender
@@ -315,7 +333,8 @@ def create_alert(request):
             subject=subject,
             body=body,
             read=user == request.user,
-            follow_request=follow_request
+            follow_request=follow_request,
+            book_location=book_location
 
         )
 
@@ -399,4 +418,29 @@ def property(request, listing_id):
         return JsonResponse({
             "error": "GET or PUT request required."
         }, status=400)
+
+
+def follow_property(request, listing_id):
+    try:
+        prop_listing = Property_listing.objects.get( pk=listing_id)
+
+    except Property_listing.DoesNotExist:
+        return JsonResponse({"error": "Property not found."}, status=404)
+
+    request.user.property_follow.add(prop_listing)
+
+    return HttpResponseRedirect(reverse("property_profile", args=(prop_listing.id,)))
+
+
+
+def unfollow_property(request, listing_id):
+    try:
+        prop_listing = Property_listing.objects.get( pk=listing_id)
+
+    except Property_listing.DoesNotExist:
+        return JsonResponse({"error": "Property not found."}, status=404)
+
+    request.user.property_follow.remove(prop_listing)
+
+    return HttpResponseRedirect(reverse("feed"))
 

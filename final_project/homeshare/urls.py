@@ -13,6 +13,8 @@ urlpatterns = [
     path("new_listing", views.new_listing, name="new_listing"),
     path("property_profile/<int:id>", views.property_profile, name="property_profile"),
     path("user_profile/<str:username>", views.user_profile, name="user_profile"),
+    path("follow_property/<int:listing_id>", views.follow_property, name="follow_property"),
+    path("unfollow_property/<int:listing_id>", views.unfollow_property, name="unfollow_property"),
 
 
     # API Routes
